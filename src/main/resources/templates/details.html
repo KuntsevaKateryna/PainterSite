@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<h2 th:text="${painting.title}"></h2>
+<div>
+    <a th:href="@{/images/fulls/}+${painting.path}" class="image"><img th:src="@{/images/fulls/}+${painting.path}" alt="" width="150%" /></a>
+
+
+</div>
+
+<div>
+    <p th:text="${painting.size}"></p>
+    <p th:text="${painting.year}"></p>
+    <p th:text="${painting.description}"></p>
+
+</div>
+
+</body>
+</html>
