@@ -38,7 +38,7 @@ public class MainController {
         int i = 0;
         model.addAttribute("i",i);
         logger.info("works");
-        return "gallery";
+        return "index";
     }
 
     @GetMapping("/load")
