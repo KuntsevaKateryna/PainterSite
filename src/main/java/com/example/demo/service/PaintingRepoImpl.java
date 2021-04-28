@@ -55,4 +55,18 @@ public class PaintingRepoImpl implements PaintingRepoService {
         p.setIn_stock(in_stock);
         paintingRepo.save(p);
     }
+
+    @Override
+    public void correctPainting(Long id, String title, String description, String size, String path, String year, Boolean in_stock) throws Exception {
+        Painting painting = getPainting( id) ;
+        if (painting == null)
+            throw new Exception("Painting not found " + painting.getTitle());
+        painting.setTitle(title);
+        painting.setDescription(description);
+        painting.setSize(size);
+        painting.setPath(path);
+        painting.setYear(year);
+        painting.setIn_stock(in_stock);
+        paintingRepo.save(painting);
+    }
 }

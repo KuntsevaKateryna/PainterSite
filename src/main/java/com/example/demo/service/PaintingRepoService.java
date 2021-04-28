@@ -11,4 +11,5 @@ public interface PaintingRepoService {
     public List<Painting> selectAll();
     public void addPainting(String title, String description, String size, String path,String year, Boolean in_stock);
 
- }
+    public void correctPainting(Long id, String title, String description, String size, String path,String year, Boolean in_stock) throws Exception;
+}

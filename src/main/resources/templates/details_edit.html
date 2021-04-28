@@ -1,0 +1,60 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Guestbook</title>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <meta charset="utf-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <style>
+      body { padding-top: 80px; }
+      form span { font-weight: bold; padding-right: 1em; display: block; }
+      form input[type="submit"] { display: block; margin-top: 1em; }
+      .greeting { padding-bottom: 0.5em; }
+      .messages { border-top: 1px solid black }
+      .message { display: block; }
+      .message span { padding-top: 0.5em; }
+      .message .username { font-weight: bold; width: 100px; float: left;}
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Guestbook</a>
+        </div>
+    </div>
+</nav>
+
+<!--
+<form method="post">
+        <input type="text" name="title" th:value="${post.title}" placeholder="Enter Title" class="form-control"> <br>
+        <input type="text" name="annons" th.value="${post.annons}" placeholder="Enter Anons" class="form-control"> <br>
+        <textarea name="full_text" placeholder="Enter info" class="form-control"th:text="${post.full_text}"></textarea>
+        <button type="submit" class="btn btn-success">Save article</button>
+    </form>
+-->
+<div class="main container">
+    <div class="input">
+        <!-- Set form encoding type to multipart form data -->
+        <form th:action="'/details/'+${painting.id}+'/edit'" method="post" enctype="multipart/form-data">
+            <span>Painting title:</span><input type="text" name="title" th:value="${painting.title}"/>
+            <span>File:</span>
+            <input type="file" name="file" accept=".jpg, image/jpeg" th:value="${painting.path}"/>
+
+            <span>Size:</span><input type="text" name="size" th:value="${painting.size}"/>
+            <span>Year:</span><input type="text" name="year" th:value="${painting.year}"/>
+            <span>Description:</span> <p><textarea name="description" th:text="${painting.description}"> </textarea></p>
+            <span>In stock:</span> <input type="checkbox" name="in_stock" th:checked="${painting.in_stock}" />
+            <input type="submit" value="Save"/>
+        </form>
+    </div>
+
+</div>
+
+<p th:text="${message}"   /> </br>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+</body>
+</html>
+
