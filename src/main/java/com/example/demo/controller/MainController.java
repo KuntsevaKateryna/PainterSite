@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,11 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class MainController {
-//JavaMailSender
 
     @Value("${local_path_value}")
     private String local_path;
@@ -55,7 +57,6 @@ public class MainController {
     }
 
 
-
     @GetMapping("/home")
     public String home(Model model) {
         List<Painting> paintings = paintingRepo.selectAll();
@@ -63,14 +64,21 @@ public class MainController {
         int i = 0;
         model.addAttribute("i", i);
         logger.info("works");
+  /*      SecurityContext securityContext = SecurityContextHolder.getContext();
+        logger.info("securityContext.getAuthentication().getName() "+securityContext.getAuthentication().getName());
+        logger.info("securityContext.getAuthentication().getAuthorities() "+securityContext.getAuthentication().getAuthorities());
+        logger.info("securityContext.getAuthentication().getCredentials() "+securityContext.getAuthentication().getCredentials());
+*/
         return "index";
     }
 
+    @PreAuthorize("hasAuthority('write')")
     @GetMapping("/load")
     public String loadFile(Model model) {
         logger.info("works_load");
         return "load_painting";
     }
+
 
     @GetMapping("/contact")
     public String contactPage(Model model) {
@@ -129,7 +137,7 @@ public class MainController {
         return "details_with_Remove_Correct";
     }
 
-
+    @PreAuthorize("hasAuthority('write')")
     @GetMapping("/details/{id}/edit") // id - dynamic param
     public String detailsEdit(@PathVariable(value = "id") long id,
                               Model model) {
@@ -166,6 +174,7 @@ public class MainController {
         return redirectPage;
     }
 
+    @PreAuthorize("hasAuthority('write')")
     @PostMapping("/details/{id}/delete")
     public String deletePainting(@PathVariable(value = "id") long id,
                                  Model model) {
