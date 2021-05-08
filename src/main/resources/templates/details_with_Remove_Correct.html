@@ -20,8 +20,8 @@
     <p th:text="${painting.description}"></p>
 
 </div>
-<a th:href="'/details/'+${painting.id}+'/edit'">Edit...</a> <br/>
-<form th:action="'/details/'+${painting.id}+'/delete'" method="post">
+<a th:href="'/special/details/'+${painting.id}+'/edit'">Edit...</a> <br/>
+<form th:action="'/main/details/'+${painting.id}+'/delete'" method="post">
     <button type="submit" class="btn btn-warning">Delete</button>
 </form>
 </body>

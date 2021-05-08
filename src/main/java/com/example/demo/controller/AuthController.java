@@ -33,7 +33,7 @@ public class AuthController {
         return "success";
     }
 
-   @GetMapping("/home")
+   @GetMapping("/main/home")
     public String getDefaultPage() {
         return "home";
     }

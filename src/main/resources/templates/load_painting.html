@@ -25,7 +25,7 @@
 <div class="main container">
     <div class="input">
         <!-- Set form encoding type to multipart form data -->
-        <form action="/save_painting" method="post" enctype="multipart/form-data">
+        <form action="/special/save_painting" method="post" enctype="multipart/form-data">
             <span>Painting title:</span><input type="text" name="title" th:value="${title}"/>
             <span>File:</span>
             <input type="file" name="file" accept=".jpg, image/jpeg"/>

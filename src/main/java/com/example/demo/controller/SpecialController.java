@@ -1,104 +1,41 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Painting;
-import com.example.demo.repo.UserRepo;
-import com.example.demo.security.UserDetailsServiceImpl;
 import com.example.demo.service.PaintingRepoImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
-@RequestMapping("/main")
-public class MainController {
+@RequestMapping("/special")
+public class SpecialController {
 
+    @Value("${local_path_value}")
+    private String local_path;
 
-    Logger logger = LoggerFactory.getLogger(MainController.class);
+    Logger logger = LoggerFactory.getLogger(SpecialController.class);
 
 
     @Autowired
     private PaintingRepoImpl paintingRepo;
-
-    @Autowired
-    UserDetailsServiceImpl userDetailsServiceImpl;
 
 
     @Autowired
     private JavaMailSender javaMailSender;
 
 
-    @GetMapping("/registration")
-    public String registrationForm(Model model) {
-        return "registration";
-    }
-
-    @PostMapping("/registration")
-    public String save_new_user( @RequestParam String email,
-                               @RequestParam String firstName,
-                               @RequestParam String lastName,
-                               @RequestParam String password,
-                               @RequestParam String password_double,
-                               Model model) {
-if (!password.equals(password_double))
-{
-    model.addAttribute("message", "Passwords are not equal");
-    return "registration";
-}
-else
-{
-    userDetailsServiceImpl.addUser( email, firstName, lastName, password);
-}
-
-        return "registration";
-    }
-
-    @PostMapping("/contact")
-    public String sendMessage( @RequestParam String First_Name,
-                               @RequestParam String Last_Name,
-                               @RequestParam String Email_Address,
-                               @RequestParam String message,
-                               Model model) {
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setTo("k.kuntseva@gmail.com");
-        msg.setSubject("From My Site");
-        msg.setFrom(Email_Address);
-        logger.info(msg.getFrom());
-        msg.setText(message);
-        javaMailSender.send(msg);
-        return "contact";
-    }
-
-
-    @GetMapping("/home")
-    public String home(Model model) {
-        List<Painting> paintings = paintingRepo.selectAll();
-        model.addAttribute("paintings", paintings);
-        int i = 0;
-        model.addAttribute("i", i);
-        logger.info("works");
-  /*      SecurityContext securityContext = SecurityContextHolder.getContext();
-        logger.info("securityContext.getAuthentication().getName() "+securityContext.getAuthentication().getName());
-        logger.info("securityContext.getAuthentication().getAuthorities() "+securityContext.getAuthentication().getAuthorities());
-        logger.info("securityContext.getAuthentication().getCredentials() "+securityContext.getAuthentication().getCredentials());
-*/
-        return "index";
-    }
-/*
     @PreAuthorize("hasAuthority('write')")
     @GetMapping("/load")
     public String loadFile(Model model) {
@@ -106,13 +43,9 @@ else
         return "load_painting";
     }
 
-*/
-    @GetMapping("/contact")
-    public String contactPage(Model model) {
-        return "contact";
-    }
 
-    /*public String load_file(MultipartFile file) throws IOException {
+
+    public String load_file(MultipartFile file) throws IOException {
         //loading file works!!!
         String filename = null;
         if (file != null && !file.isEmpty()
@@ -124,9 +57,8 @@ else
             logger.info("write to file " + filename);
         }
         return filename;
-    }*/
+    }
 
-    /*
     @PostMapping("/save_painting")
     public String post(@RequestParam(name = "file", required = false) MultipartFile file,
                        @RequestParam String title,
@@ -136,43 +68,24 @@ else
                        Model model) throws IOException {
         logger.info("post starts to work");
         try {
-            //loading file works!!!
-        /*    String filename = null;
-            if (file != null && !file.isEmpty()
-                    && file.getContentType().equals("image/jpeg")) {
-                filename = file.getOriginalFilename();
-                FileOutputStream fos = new FileOutputStream(local_path+filename);
-                byte[] buffer = file.getBytes();
-                fos.write(buffer, 0, buffer.length);
-                logger.info("write to file "+filename );
-            }*/
-    /*
             String filename = load_file(file);
             paintingRepo.addPainting(title, description, size, filename, year, true);
         } catch (Exception e) {
             model.addAttribute("message", e.getMessage());
         }
-        return "redirect:/load";
+        return "redirect:/special/load";
     }
-*/
 
-    @GetMapping("/details/{id}") // id - dynamic param
-    public String painterDetails(@PathVariable(value = "id") long id,
-                                 Model model) {
-        Painting painting = paintingRepo.getPainting(id);
-        if (painting == null)
-            return "redirect:/main/home";
-        model.addAttribute("painting", painting);
-        return "details";
-    }
-/*
+
+
+
     @PreAuthorize("hasAuthority('write')")
     @GetMapping("/details/{id}/edit") // id - dynamic param
     public String detailsEdit(@PathVariable(value = "id") long id,
                               Model model) {
         Painting painting = paintingRepo.getPainting(id);
         if (painting == null)
-            return "redirect:/home";
+            return "redirect:/main/home";
         model.addAttribute("painting", painting);
         return "details_edit";
     }
@@ -188,7 +101,7 @@ else
                                     Model model) {
 
         Painting painting = null;
-        String redirectPage = "redirect:/home";
+        String redirectPage = "redirect:/main/home";
         try {
             String filename = load_file(file);
             if (filename == null)
@@ -208,7 +121,7 @@ else
     public String deletePainting(@PathVariable(value = "id") long id,
                                  Model model) {
 
-        String redirectPage = "redirect:/home";
+        String redirectPage = "redirect:/main/home";
         try {
 
             paintingRepo.deletePainting(id);
@@ -219,5 +132,5 @@ else
             redirectPage = "errorPage";
         }
         return redirectPage;
-    }*/
+    }
 }
