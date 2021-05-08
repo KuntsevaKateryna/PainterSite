@@ -1,11 +1,14 @@
 package com.example.demo.security;
 
+import com.example.demo.model.Role;
+import com.example.demo.model.Status;
 import com.example.demo.model.User;
 import com.example.demo.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
@@ -15,8 +18,9 @@ import java.util.List;
 @Service("userDetailsServiceImpl")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    /*@Autowired
-    UserRepo userRepo;*/
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     private final UserRepo userRepo;
 
     @Autowired
@@ -29,18 +33,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepo.findByEmail(email).orElseThrow(() ->
                 new UsernameNotFoundException("User doesn't exists"));
         return SecurityUser.getUserDetails(user);
-        /*List<User> users = userRepo.findAll();
-        User user = null;
-        User currentUser = null;
-        Iterator iter = users.iterator();
-        while (iter.hasNext()){
-             user = (User)iter.next();
-            if (user.getEmail().equals(email))
-                currentUser= user;
-        }
-
-        return  SecurityUser.getUserDetails(currentUser);*/
     }
 
 
+    public void addUser(String email,  String firstName, String lastName, String password) {
+        User newUser = new User();
+        newUser.setEmail(email);
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setRole(Role.USER);
+        newUser.setStatus(Status.ACTIVE);
+        newUser.setPassword(passwordEncoder.encode(password));
+        userRepo.save(newUser);
+    }
 }
