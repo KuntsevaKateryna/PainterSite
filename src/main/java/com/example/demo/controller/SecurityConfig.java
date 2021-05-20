@@ -32,41 +32,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //super.configure(http);
  http
                 .csrf().disable()
+         .formLogin()
+         .loginPage("/auth/login").permitAll()
+         .defaultSuccessUrl("/main/home")
+         .failureUrl("/auth/login-error").permitAll()
+         .and()
                 .authorizeRequests()
-                .antMatchers("/main/**").permitAll()
+                .antMatchers("/main/**", "/assets/**", "/images/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
-                .formLogin()
-                .loginPage("/auth/login").permitAll()
-                .defaultSuccessUrl("/main/home")
-                .failureUrl("/auth/login-error").permitAll()
-                .and()
+
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout", "POST"))
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .deleteCookies("JSESSIONID")
                 .logoutSuccessUrl("/auth/login");
-    }
-
-    @Bean
-    @Override
-    protected UserDetailsService userDetailsService() {
-        //as an alternative of DB
-        return new InMemoryUserDetailsManager(
-                User.builder()
-                        .username("admin")
-                        .password(passwordEncoder().encode("admin"))
-                        .authorities(Role.ADMIN.getAuthorities())
-                        //.roles(Role.ADMIN.toString())
-                .build(),
-                User.builder()
-                .username("user")
-                .password(passwordEncoder().encode("user"))
-                .authorities(Role.USER.getAuthorities())
-                .build()
-        );
     }
 
     @Override

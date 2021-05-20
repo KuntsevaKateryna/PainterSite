@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Painting;
+import com.example.demo.model.Permision;
+import com.example.demo.model.Role;
 import com.example.demo.repo.UserRepo;
 import com.example.demo.security.UserDetailsServiceImpl;
 import com.example.demo.service.PaintingRepoImpl;
@@ -10,10 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+
+import java.util.*;
 
 @Controller
 @RequestMapping("/main")
@@ -28,6 +35,8 @@ public class MainController {
 
     @Autowired
     UserDetailsServiceImpl userDetailsServiceImpl;
+
+
 
 
     @Autowired
@@ -83,17 +92,11 @@ else
         int i = 0;
         model.addAttribute("i", i);
         logger.info("works");
-  /*      SecurityContext securityContext = SecurityContextHolder.getContext();
-        logger.info("securityContext.getAuthentication().getName() "+securityContext.getAuthentication().getName());
-        logger.info("securityContext.getAuthentication().getAuthorities() "+securityContext.getAuthentication().getAuthorities());
-        logger.info("securityContext.getAuthentication().getCredentials() "+securityContext.getAuthentication().getCredentials());
-*/
-        return "index";
+         return "index";
     }
 
     @GetMapping("/contact")
     public String contactPage(Model model) {
-       //if (1 == 1) throw new RuntimeException("artificial exception");
         return "contact";
     }
 
@@ -105,6 +108,14 @@ else
         if (painting == null)
             return "redirect:/main/home";
         model.addAttribute("painting", painting);
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+         if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().
+                stream().filter(s -> s.toString().equals(Permision.WRITING.getPermission())).count()>0 ) {
+             //if user with admin role is loaded
+             return "details_with_Remove_Correct";
+        }
+         else
         return "details";
     }
 }

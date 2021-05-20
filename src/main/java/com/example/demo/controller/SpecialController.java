@@ -77,8 +77,6 @@ public class SpecialController {
     }
 
 
-
-
     @PreAuthorize("hasAuthority('write')")
     @GetMapping("/details/{id}/edit") // id - dynamic param
     public String detailsEdit(@PathVariable(value = "id") long id,
