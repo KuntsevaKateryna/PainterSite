@@ -22,6 +22,34 @@ body {
   margin: 0;
 }
 
+
+/* Style the container with a rounded border, grey background and some padding and margin */
+.container_review {
+border: 2px solid #ccc;
+background-color: #eee;
+border-radius: 5px;
+padding: 16px;
+margin: 16px 0;
+}
+
+/* Clear floats after containers */
+.container_review::after {
+content: "";
+clear: both;
+display: table;
+}
+
+
+/* Increase the font-size of a span element */
+.container_review span {
+font-size: 20px;
+margin-right: 15px;
+}
+
+
+}
+
+
 .painting_box {
 float:left;
   width: 60%;
@@ -36,7 +64,7 @@ float:right;
 }
 
 .painting_image {
- width: 60%;
+ width: 50%;
 }
 
 article,

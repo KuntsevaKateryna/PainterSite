@@ -1,10 +1,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Guestbook</title>
+<head  th:insert="blocks/header :: site_design">
+    <title>Edit painting</title>
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
     <meta charset="utf-8"></meta>
     <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
-    <style>
+    <!--style>
       body { padding-top: 80px; }
       form span { font-weight: bold; padding-right: 1em; display: block; }
       form input[type="submit"] { display: block; margin-top: 1em; }
@@ -13,29 +13,24 @@
       .message { display: block; }
       .message span { padding-top: 0.5em; }
       .message .username { font-weight: bold; width: 100px; float: left;}
-    </style>
+    </style -->
+
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">Guestbook</a>
-        </div>
-    </div>
-</nav>
+<header th:insert="blocks/header :: header"></header>
 
 <div class="main container">
     <div class="input">
         <!-- Set form encoding type to multipart form data -->
         <form th:action="'/special/details/'+${painting.id}+'/edit'" method="post" enctype="multipart/form-data">
-            <span>Painting title:</span><input type="text" name="title" th:value="${painting.title}"/>
+            <span>Painting title:</span><input type="text" name="title" th:value="${painting.title}"/> <br/>
             <span>File:</span>
-            <input type="file" name="file" accept=".jpg, image/jpeg" th:value="${painting.path}"/>
+            <input type="file" name="file" accept=".jpg, image/jpeg" th:value="${painting.path}"/> <br/>
 
-            <span>Size:</span><input type="text" name="size" th:value="${painting.size}"/>
-            <span>Year:</span><input type="text" name="year" th:value="${painting.year}"/>
-            <span>Description:</span> <p><textarea name="description" th:text="${painting.description}"> </textarea></p>
-            <span>In stock:</span> <input type="checkbox" name="in_stock" th:checked="${painting.in_stock}" />
+            <span>Size:</span><input type="text" name="size" th:value="${painting.size}"/> <br/>
+            <span>Year:</span><input type="text" name="year" th:value="${painting.year}"/> <br/>
+            <span>Description:</span> <p><textarea name="description" th:text="${painting.description}"> </textarea></p> <br/>
+            <span>In stock:</span> <input type="checkbox" name="in_stock" th:checked="${painting.in_stock}" /> <br/>
             <input type="submit" value="Save"/>
         </form>
     </div>
@@ -46,6 +41,8 @@
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<div th:insert="blocks/footer :: footer"></div>
 
 </body>
 </html>
