@@ -10,6 +10,42 @@
             </div>
         </div>
     </div>
+
+    <!-- jQuery -->
+    <script type="text/javascript" src="../static/assets/js/jquery.min.js" th:src="@{/assets/js/jquery.min.js}"></script>
+    <!-- jQuery Easing -->
+    <script type="text/javascript" src="../static/assets/js/jquery.easing.1.3.js" th:src="@{/assets/js/jquery.easing.1.3.js}"></script>
+    <!-- Bootstrap -->
+    <script type="text/javascript" src="../static/assets/js/bootstrap.min.js" th:src="@{/assets/js/bootstrap.min.js}"></script>
+    <!-- Waypoints -->
+    <script type="text/javascript" src="../static/assets/js/jquery.waypoints.min.js" th:src="@{/assets/js/jquery.waypoints.min.js}"></script>
+    <!-- Magnific Popup -->
+    <script type="text/javascript" src="../static/assets/js/jquery.magnific-popup.min.js" th:src="@{/assets/js/jquery.magnific-popup.min.js}"></script>
+    <!-- Salvattore -->
+    <script type="text/javascript" src="../static/assets/js/salvattore.min.js" th:src="@{/assets/js/salvattore.min.js}"></script>
+    <!-- Main JS -->
+    <script type="text/javascript" src="../static/assets/js/main.js" th:src="@{/assets/js/main.js}"></script>
+
+
+</div>
+
+<div th:fragment="comments">
+
+    <form th:action="'/main/addComment/'+${painting.id}" method="post">
+        <textarea name="comment" placeholder="Please, add your comment"></textarea>
+        <button type="submit">Add comment</button>
+    </form>
+
+
+    <div style="width: 400px; height: 200px; overflow-y: scroll;">
+
+        <div th:each="r :${allReviews}" class="container_review">
+            <span th:text="${r.User.email}"></span>
+            <p th:text="${r.full_text}"></p>
+            <p th:text="${#dates.format(r.review_date, 'dd-MM-yyyy HH:mm')}"></p>
+        </div>
+    </div>
+
 </div>
 
 

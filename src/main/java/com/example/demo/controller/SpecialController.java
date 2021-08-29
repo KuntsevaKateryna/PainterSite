@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Painting;
+import com.example.demo.model.Review;
 import com.example.demo.service.PaintingRepoImpl;
+import com.example.demo.service.ReviewRepoServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +29,20 @@ public class SpecialController {
 
     Logger logger = LoggerFactory.getLogger(SpecialController.class);
 
-
     @Autowired
     private PaintingRepoImpl paintingRepo;
-
 
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Autowired
+    ReviewRepoServiceImpl reviewRepoServiceImpl;
+
+    //show all comments on painting
+    public void showAllComments(Long paintingId, Model model){
+        List<Review> allReviews =  reviewRepoServiceImpl.selectAllPaintingReviews(paintingId);
+        model.addAttribute("allReviews", allReviews);
+    }
 
     @PreAuthorize("hasAuthority('write')")
     @GetMapping("/load")
@@ -43,10 +51,7 @@ public class SpecialController {
         return "load_painting";
     }
 
-
-
     public String load_file(MultipartFile file) throws IOException {
-        //loading file works!!!
         String filename = null;
         if (file != null && !file.isEmpty()
                 && file.getContentType().equals("image/jpeg")) {
@@ -85,6 +90,7 @@ public class SpecialController {
         if (painting == null)
             return "redirect:/main/home";
         model.addAttribute("painting", painting);
+        showAllComments(id, model);
         return "details_edit";
     }
 
@@ -105,6 +111,7 @@ public class SpecialController {
             if (filename == null)
                 filename = paintingRepo.getPainting(id).getPath();
             paintingRepo.correctPainting(id, title, description, size, filename, year, in_stock);
+            showAllComments(id, model);
 
         } catch (Exception e) {
             model.addAttribute("error", e.getClass().toString());
@@ -118,12 +125,10 @@ public class SpecialController {
     @PostMapping("/details/{id}/delete")
     public String deletePainting(@PathVariable(value = "id") long id,
                                  Model model) {
-
         String redirectPage = "redirect:/main/home";
         try {
-
             paintingRepo.deletePainting(id);
-
+            showAllComments(id, model);
         } catch (Exception e) {
             model.addAttribute("error", e.getClass().toString());
             model.addAttribute("message", e.getMessage());
