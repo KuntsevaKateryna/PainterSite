@@ -5,6 +5,9 @@ import com.example.demo.model.Status;
 import com.example.demo.model.User;
 import com.example.demo.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -45,5 +48,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         newUser.setStatus(Status.ACTIVE);
         newUser.setPassword(passwordEncoder.encode(password));
         userRepo.save(newUser);
+    }
+
+    public String currentUserNameSimple() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = null;
+        if (!(authentication instanceof AnonymousAuthenticationToken))
+            currentUserName = authentication.getName();
+
+        return currentUserName;
     }
 }
